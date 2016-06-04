@@ -1,15 +1,12 @@
-'''
+"""
 Created on 8 Oct 2013
-
 @author: James McInerney
-'''
-
-#extension of Sensors to deal with slotted data (i.e., multiple observations per time slot)
+extension of Sensors to deal with slotted data 
+(i.e., multiple observations per time slot)
+"""
 
 from model.sensors import MVGaussianSensor, Sensor
-from numpy import *
-
-
+import numpy as np
 
 class SlottedSensor(Sensor):
     def __init__(self,K,sensor):
@@ -22,8 +19,8 @@ class SlottedSensor(Sensor):
         NS = T.max()+1
         K = self._K
         ln_obs_uns = self._sensor.loglik(X)
-        #all that remains is to convert the unslotted version to slotted likelihoods:
-        ln_obs_lik = zeros((NS,K))
+        #convert the unslotted to slotted likelihoods
+        ln_obs_lik = np.zeros((NS,K))
         #requires: T value of each X is in ascending order:
         t = 0 #position in X, T and ln_obs_uns
         for n in range(NS): #for each time slot
@@ -40,9 +37,9 @@ class SlottedSensor(Sensor):
     def m(self,txs,exp_z):
         #idea: repeat exp_z for obs in same time slot
         (T,X) = txs
-        (N,XDim) = shape(X)
-        (NS,K) = shape(exp_z)
-        Z = zeros((N,K))
+        (N,XDim) = np.shape(X)
+        (NS,K) = np.shape(exp_z)
+        Z = np.zeros((N,K))
         t = 0 #position in X, T and ln_obs_uns
         for n in range(NS): #for each time slot
             while t<len(T) and T[t]==n:
